@@ -1,0 +1,19 @@
+{
+  "name": "timescalechallenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ayoub Dardory",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parse": "^4.12.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "worker-farm": "^1.7.0"
+  }
+}
