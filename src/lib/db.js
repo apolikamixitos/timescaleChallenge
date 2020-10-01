@@ -1,11 +1,11 @@
-const { Pool, Client } = require('pg');
-const { databaseConnectionString, maxConcurrentWorkers, postgresMaxConnections } = require('./config');
+const { Client } = require('pg');
+const { databaseConnectionString } = require('../config');
 
 class PgsqlClient {
   // eslint-disable-next-line class-methods-use-this
   async getInstance() {
     if (!PgsqlClient.instance) {
-      console.log('new DB Pool instance ... Worker PID:', process.pid);
+      console.log('new DB Client instance ... Worker PID:', process.pid);
       const client = new Client({
         connectionString: databaseConnectionString,
       });

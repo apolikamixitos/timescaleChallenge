@@ -3,6 +3,12 @@ const WORKER_ACTION = {
   EXIT_PROCESS: 'EXIT_PROCESS',
 };
 
+const WORKER_STATUS = {
+  READY: 'READY',
+  FINISHED: 'FINISHED',
+};
+
 module.exports = {
   WORKER_ACTION,
+  WORKER_STATUS,
 };

@@ -15,6 +15,7 @@ const dbConfig = {
 const databaseConnectionString = `pgsql://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`;
 
 // Concurrent workers (max CPUs in the machine)
+// const maxConcurrentWorkers = 2;
 const maxConcurrentWorkers = os.cpus().length;
 
 module.exports = {

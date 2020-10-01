@@ -1,6 +1,6 @@
 const moment = require('moment');
 const PgsqlClient = require('./db');
-const { WORKER_ACTION } = require('./constant');
+const { WORKER_ACTION, WORKER_STATUS } = require('../constant');
 
 let client = null;
 
@@ -16,7 +16,7 @@ async function runQuery(hostname, startTime, endTime) {
 
 async function initWorker() {
   client = await PgsqlClient.getInstance();
-  process.send({ status: 'READY' });
+  process.send({ status: WORKER_STATUS.READY });
 }
 
 async function processQuery(data) {
@@ -27,11 +27,17 @@ async function processQuery(data) {
     const stats = {
       queryId: data.queryId,
       hostId: data.hostId,
-      workerId: data.workerId,
       duration: moment().diff(startDate, 'milliseconds'),
       totalRows: dbResult.rowCount,
+      processId: process.pid,
+      // Optional metrics fields
+      usedMemory: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
     };
-    process.send({ queryIndex: data.queryIndex, stats });
+    process.send({
+      status: WORKER_STATUS.FINISHED,
+      queryIndex: data.queryIndex,
+      stats,
+    });
   }).catch((err) => {
     console.log('Error with worker', process.pid);
     console.error(err);
