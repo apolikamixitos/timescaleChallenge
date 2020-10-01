@@ -156,9 +156,9 @@ class ClusterManager {
       totalUsedMemory += queryStats.usedMemory;
 
       if (!workerAssignedQueries[queryStats.processId]) {
-        workerAssignedQueries[queryStats.processId] = [];
+        workerAssignedQueries[queryStats.processId] = new Set(); // Unique values
       }
-      workerAssignedQueries[queryStats.processId].push(queryStats.hostId);
+      workerAssignedQueries[queryStats.processId].add(queryStats.hostId);
     });
 
     averageDuration = totalDuration / totalQueries;
@@ -167,7 +167,7 @@ class ClusterManager {
 
     console.log('workerAssignedQueries', workerAssignedQueries);
     Object.entries(workerAssignedQueries).map(([processId, hostIds]) => {
-      console.log('processId:', processId, 'had', hostIds.length, 'hostIds');
+      console.log('processId:', processId, 'had', hostIds.size, 'hostIds');
     });
     console.log('totalUsedMemory', totalUsedMemory, 'MB');
     console.log('totalQueries', totalQueries);

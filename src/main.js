@@ -1,13 +1,17 @@
 const path = require('path');
 const cluster = require('cluster');
+const { argv } = require('yargs');
 const { ClusterManager } = require('./lib/cluster-manager');
 const { parseQueries } = require('./lib/parser');
-
 const { queryFile } = require('./config');
 
 async function main() {
-  // TODO: Add CLI flag for the queryFile instead of the default one
-  const validEntries = await parseQueries(queryFile);
+  // Process the input
+  let inputFile = queryFile;
+  if (argv.file) {
+    inputFile = argv.file;
+  }
+  const validEntries = await parseQueries(inputFile);
 
   // Prepare the cluster manager
   const clusterManager = new ClusterManager();
