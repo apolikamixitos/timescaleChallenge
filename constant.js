@@ -1,0 +1,8 @@
+const WORKER_ACTION = {
+  PERFORM_QUERY: 'PERFORM_QUERY',
+  EXIT_PROCESS: 'EXIT_PROCESS',
+};
+
+module.exports = {
+  WORKER_ACTION,
+};
