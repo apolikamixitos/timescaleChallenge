@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Ajv = require('ajv');
+const moment = require('moment');
 const parse = require('csv-parse/lib/sync');
 
 class Parser {
@@ -59,6 +60,16 @@ class Parser {
       const allErrors = validator.errors.map((error) => `${error.dataPath} ${error.message}`.trim());
       throw Error(allErrors);
     }
+
+    // Validate the start_time, end_time
+    records.map((record, index) => {
+      const startTime = moment(record.start_time).format('YYYY-MM-DD HH:mm:ss');
+      const endTime = moment(record.end_time).format('YYYY-MM-DD HH:mm:ss');
+
+      if (startTime > endTime) {
+        throw Error(`Line ${index}: start time should be greater than end time`);
+      }
+    });
   }
 }
 

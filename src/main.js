@@ -13,7 +13,7 @@ async function main() {
   }
 
   const parser = new Parser(inputFile);
-  const validEntries = parser.parseQueries(inputFile);
+  const validEntries = parser.parseQueries();
 
   // Prepare the cluster manager
   const clusterManager = new ClusterManager();
