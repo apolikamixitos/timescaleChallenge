@@ -180,6 +180,4 @@ class ClusterManager {
   }
 }
 
-module.exports = {
-  ClusterManager,
-};
+module.exports = ClusterManager;

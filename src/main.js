@@ -1,8 +1,8 @@
 const path = require('path');
 const cluster = require('cluster');
 const { argv } = require('yargs');
-const { ClusterManager } = require('./lib/cluster-manager');
-const { parseQueries } = require('./lib/parser');
+const ClusterManager = require('./lib/cluster-manager');
+const Parser = require('./lib/parser');
 const { queryFile } = require('./config');
 
 async function main() {
@@ -11,7 +11,9 @@ async function main() {
   if (argv.file) {
     inputFile = argv.file;
   }
-  const validEntries = await parseQueries(inputFile);
+
+  const parser = new Parser(inputFile);
+  const validEntries = parser.parseQueries(inputFile);
 
   // Prepare the cluster manager
   const clusterManager = new ClusterManager();
