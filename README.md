@@ -6,7 +6,7 @@ This challenge consists of building a tool that will help the team to run batche
 
 The tool has been written with `Node.JS`.
 
-![Statistics](../assets/stats.png)
+![Statistics](./assets/stats.png)
 
 ## Workflow
 
@@ -66,17 +66,16 @@ PGSQL_PASSWORD (default: 'password')
 PGSQL_HOST (default: 'localhost')
 PGSQL_PORT (default: '5432')
 PGSQL_DATABASE (default: 'homework')
-MAX_CONCURRENT_WORKERS (default: 'MAX_CPU')
+MAX_CONCURRENT_WORKERS (default: [MAX_CPU])
 ```
 
 ### Testing:
 
-In order to be able to do testing, just run the command: `npm test`
+In order to be able to do testing, just run the command: `npm run docker-compose-test`
 
 You can check an example of the test coverage on:
 
-# TODO: Update screenshot
-![Test Coverage](../screenshots/test-coverage.png)
+![Test Coverage](./assets/test-coverage.png)
 
 ## Docker (Optional)
 
@@ -86,20 +85,33 @@ In order to build a docker image of the project, you can just run this command:
 
 ### Manual run:
 
+##### TimescaleDB
 ```
 export TIMESCALE_CONTAINER_NAME=timescaledb-instance
 
 docker run -d --name ${TIMESCALE_CONTAINER_NAME} -v $(pwd)/src/data:/data -p 5432:5432 -e POSTGRES_PASSWORD=password timescale/timescaledb:latest-pg12
 
 # Intialization
-sleep 5
+sleep 10
 docker exec -ti ${TIMESCALE_CONTAINER_NAME} bash -c 'psql -U postgres < /data/cpu_usage.sql'
 docker exec -ti ${TIMESCALE_CONTAINER_NAME} bash -c 'psql -U postgres < /data/cpu_import.sql'
+```
+
+##### Tool
+
+If you have docker installed on your host machine, you can use the DNS entry `host.docker.internal` that points to the host machine.
+(Tested on MacOS 10.15.3 with Docker 19.03.8)
+
+```
+export TIMESCALE_APP_CONTAINER_NAME=timescaledb-app-1
+docker run -d --name ${TIMESCALE_APP_CONTAINER_NAME} -v $(pwd)/src/data:/app/data -e PGSQL_HOST=host.docker.internal timescale-app:latest
+docker logs ${TIMESCALE_APP_CONTAINER_NAME}
 ```
 
 ### Docker Compose:
 
 Instead of managing different dependencies separately, I used `docker-compose` with `timescale` docker image to provision the database:
+`npm run docker-compose`
 
 `docker-compose --env-file ./.env.docker-compose -f ./docker/docker-compose.yml up`
 

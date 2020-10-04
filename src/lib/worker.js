@@ -48,7 +48,9 @@ async function processQuery(data) {
 async function exitProcess() {
   // console.log('Process has exited:', process.pid);
   // Gracefully close the connection to the DB
-  client.end();
+  if (client) {
+    client.end();
+  }
   process.exit(0);
 }
 

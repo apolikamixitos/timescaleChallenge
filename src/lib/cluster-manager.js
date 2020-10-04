@@ -98,7 +98,7 @@ class ClusterManager {
   // eslint-disable-next-line class-methods-use-this
   shutdown() {
     Object.keys(cluster.workers).map((workerId) => {
-      cluster.workers[workerId].kill();
+      cluster.workers[workerId].send({ action: WORKER_ACTION.EXIT_PROCESS });
       return workerId;
     });
   }
