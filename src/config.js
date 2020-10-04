@@ -16,7 +16,7 @@ const databaseConnectionString = `pgsql://${dbConfig.username}:${dbConfig.passwo
 
 // Concurrent workers (max CPUs in the machine)
 // const maxConcurrentWorkers = 2;
-const maxConcurrentWorkers = os.cpus().length;
+const maxConcurrentWorkers = parseInt(process.env.MAX_CONCURRENT_WORKERS, 10) || os.cpus().length;
 
 module.exports = {
   queryFile,
