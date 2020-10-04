@@ -6,7 +6,7 @@ const Parser = require('./lib/parser');
 const { defaultQueryFile, maxConcurrentWorkers } = require('./config');
 
 async function main() {
-  // Process the input
+  // Process the input, fallback to 'defaultQueryFile' if no file has been specified
   let inputFile = defaultQueryFile;
   if (argv.file) {
     inputFile = argv.file;

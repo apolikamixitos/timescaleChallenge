@@ -1,7 +1,14 @@
 const { Client } = require('pg');
 const { databaseConnectionString } = require('../config');
 
+/**
+ * @class
+ * @classdesc Singleton class for PgsqlClient
+ */
 class PgsqlClient {
+  /**
+   * Gets a singleton of the Client instance for the DB
+   */
   // eslint-disable-next-line class-methods-use-this
   async getInstance() {
     if (!PgsqlClient.instance) {

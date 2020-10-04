@@ -3,12 +3,23 @@ const Ajv = require('ajv');
 const moment = require('moment');
 const parse = require('csv-parse/lib/sync');
 
+/**
+ * @class
+ * @classdesc Manages the parsing of the queries CSV file
+ */
 class Parser {
+  /**
+   * Constructor
+   * @param {string} filePath
+   */
   constructor(filePath) {
     this.filePath = filePath;
     this.records = [];
   }
 
+  /**
+   * Parse and validates the queries format
+   */
   parseQueries() {
     const file = fs.readFileSync(this.filePath, 'utf-8');
     const records = parse(file, {
@@ -24,6 +35,10 @@ class Parser {
     return this.records;
   }
 
+  /**
+   * Validates the format of the CSV records
+   * @param {Array} records
+   */
   static validateRecords(records) {
     // 'ajv' json schema validation for the records
     //  ex: {

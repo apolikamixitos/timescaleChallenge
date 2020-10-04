@@ -6,7 +6,16 @@ const { table, getBorderCharacters } = require('table');
 const { calculateMedian } = require('./utils');
 const { WORKER_ACTION, WORKER_STATUS } = require('../constant');
 
+/**
+ * @class
+ * @classdesc Manages and synchronize the workflow between the workers and the master
+ */
 class ClusterManager {
+  /**
+   * Constructor
+   * @param {string} workerFilePath The path of the worker script
+   * @param {number} maxConcurrentWorkers the number of concurrent workers
+   */
   constructor(workerFilePath, maxConcurrentWorkers) {
     // Orchestrates the different workers tasks
     this.workerTasks = {};
@@ -35,7 +44,10 @@ class ClusterManager {
     this.onExitListener = this.onExitListener.bind(this);
   }
 
-  // TODO: Add JS docs
+  /**
+   * Prepares the workers, their tasks and provision them
+   * @param {Array} validEntries the records loaded from the CSV file
+   */
   prepareWorkerTasks(validEntries) {
     // Prepare the map of worker tasks
     // eslint-disable-next-line array-callback-return
@@ -81,6 +93,10 @@ class ClusterManager {
     return this.workerTasks;
   }
 
+  /**
+   * Sends the predefined tasks to the specific worker
+   * @param {string} workerId the Id that represents the worker in
+   */
   executeWorkerTasks(workerId) {
     const workerPayloads = this.workerTasks[workerId];
     // Wait until all tasks are defined in order to avoid any missed tasks because of
@@ -95,6 +111,9 @@ class ClusterManager {
     });
   }
 
+  /**
+   * Gracefully shutdown the workers of the cluster
+   */
   // eslint-disable-next-line class-methods-use-this
   shutdown() {
     Object.keys(cluster.workers).map((workerId) => {
@@ -104,6 +123,12 @@ class ClusterManager {
   }
 
   // Event Listeners
+
+  /**
+   * Event listener for each new message from a worker
+   * @param {Worker} workerFork
+   * @param {object} message
+   */
   onMessageListener(workerFork, message) {
     if (message.status === WORKER_STATUS.READY) {
       this.executeWorkerTasks(workerFork.id);
@@ -127,6 +152,9 @@ class ClusterManager {
     }
   }
 
+  /**
+   * Event listener when a worker exists
+   */
   onExitListener() {
     const totalWorkers = Object.keys(cluster.workers).length;
     // Last active worker exists, display the benchmark
@@ -135,6 +163,9 @@ class ClusterManager {
     }
   }
 
+  /**
+   * Calculate and displays the stats
+   */
   displayStats() {
     // console.log(stats);
     const workerAssignedQueries = {};

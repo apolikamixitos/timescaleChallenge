@@ -8,7 +8,7 @@
     "test": "NODE_ENV=test nyc --reporter=text mocha './src/tests' --recursive --timeout 60000 --exit",
     "start-prod": "NODE_ENV=production node /app/main.js",
     "build-docker": "docker build -t timescale-app -f docker/Dockerfile .",
-    "docker-compose": "docker-compose --env-file ./.env.docker-compose -f ./docker/docker-compose.yml up",
+    "docker-compose": "docker-compose --env-file ./.env.docker-compose -f ./docker/docker-compose.yml build && docker-compose --env-file ./.env.docker-compose -f ./docker/docker-compose.yml up",
     "docker-compose-test": "docker-compose --env-file ./.env.docker-compose-test -f ./docker/docker-compose-test.yml build && docker-compose --env-file ./.env.docker-compose-test -f ./docker/docker-compose-test.yml up --exit-code-from timescale-app"
   },
   "author": "Ayoub Dardory",

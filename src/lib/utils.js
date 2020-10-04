@@ -1,3 +1,7 @@
+/**
+ * Calculates the median of a list of numbers
+ * @param {Array} numbers
+ */
 function calculateMedian(numbers) {
   let median = 0;
   const totalNumbers = numbers.length;

@@ -17,6 +17,7 @@ describe('Cluster manager workers', () => {
   afterEach(() => {
     if (clusterManager) {
       clusterManager.shutdown();
+      // Deregister previous listeners
       cluster.removeAllListeners('message');
       cluster.removeAllListeners('exit');
     }
