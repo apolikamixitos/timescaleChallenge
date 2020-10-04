@@ -3,11 +3,11 @@ const cluster = require('cluster');
 const { argv } = require('yargs');
 const ClusterManager = require('./lib/cluster-manager');
 const Parser = require('./lib/parser');
-const { queryFile, maxConcurrentWorkers } = require('./config');
+const { defaultQueryFile, maxConcurrentWorkers } = require('./config');
 
 async function main() {
   // Process the input
-  let inputFile = queryFile;
+  let inputFile = defaultQueryFile;
   if (argv.file) {
     inputFile = argv.file;
   }

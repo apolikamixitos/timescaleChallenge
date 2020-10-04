@@ -2,6 +2,7 @@ const cluster = require('cluster');
 const moment = require('moment');
 const fs = require('fs');
 const _ = require('lodash');
+const { table, getBorderCharacters } = require('table');
 const { calculateMedian } = require('./utils');
 const { WORKER_ACTION, WORKER_STATUS } = require('../constant');
 
@@ -130,7 +131,6 @@ class ClusterManager {
     const totalWorkers = Object.keys(cluster.workers).length;
     // Last active worker exists, display the benchmark
     if (totalWorkers === 0) {
-      console.log('Display Stats');
       this.displayStats();
     }
   }
@@ -181,19 +181,36 @@ class ClusterManager {
     averageDuration = totalDuration / totalQueries;
     medianDuration = calculateMedian(_.map(this.stats.queriesStats, 'duration'));
     const totalExecutionDuration = moment().diff(this.stats.scriptStartDate, 'milliseconds');
+    const totalWorkers = Object.keys(workerAssignedQueries).length;
 
-    console.log('workerAssignedQueries', workerAssignedQueries);
+    // Preparing for display
+    const tableConfig = {
+      border: getBorderCharacters('ramac'),
+    };
+    const generalMetrics = [];
+    const extraMetrics = [];
+
+    generalMetrics.push(['Total Queries', totalQueries]);
+    generalMetrics.push(['Total Queries duration', `${totalDuration} ms`]);
+    generalMetrics.push(['Min duration', `${minDuration} ms`]);
+    generalMetrics.push(['Max duration', `${maxDuration} ms`]);
+    generalMetrics.push(['Average duration', `${averageDuration} ms`]);
+    generalMetrics.push(['Median duration', `${medianDuration} ms`]);
+
+    // Optional metrics
+    extraMetrics.push(['Total used workers', `${totalWorkers} Workers`]);
+    extraMetrics.push(['Total execution duration', `${totalExecutionDuration} ms`]);
+    extraMetrics.push(['Total used memory', `${totalUsedMemory} MB`]);
+
     Object.entries(workerAssignedQueries).map(([processId, hostIds]) => {
-      console.log('processId:', processId, 'had', hostIds.size, 'hostIds');
+      extraMetrics.push([`Worker PID: ${processId} [${hostIds.size} hosts]`, [...hostIds].join(',')]);
     });
-    console.log('totalUsedMemory', totalUsedMemory, 'MB');
-    console.log('totalQueries', totalQueries);
-    console.log('totalQueriesDuration', totalDuration);
-    console.log('minDuration', minDuration);
-    console.log('maxDuration', maxDuration);
-    console.log('averageDuration', averageDuration);
-    console.log('medianDuration', medianDuration);
-    console.log('totalScriptExecutionDuration', totalExecutionDuration);
+
+    console.log('===== General Metrics =====');
+    console.log(table(generalMetrics, tableConfig));
+
+    console.log('===== Extra Metrics =====');
+    console.log(table(extraMetrics, tableConfig));
   }
 }
 

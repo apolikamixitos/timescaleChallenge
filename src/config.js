@@ -2,7 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const os = require('os');
 
-const queryFile = path.join(__dirname, 'data', 'query_params.csv');
+const defaultQueryFile = path.join(__dirname, 'data', 'query_params.csv');
 
 const dbConfig = {
   username: process.env.PGSQL_USERNAME || 'postgres',
@@ -19,7 +19,7 @@ const databaseConnectionString = `pgsql://${dbConfig.username}:${dbConfig.passwo
 const maxConcurrentWorkers = parseInt(process.env.MAX_CONCURRENT_WORKERS, 10) || os.cpus().length;
 
 module.exports = {
-  queryFile,
+  defaultQueryFile,
   dbConfig,
   databaseConnectionString,
   maxConcurrentWorkers,

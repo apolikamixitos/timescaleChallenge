@@ -6,6 +6,12 @@ This challenge consists of building a tool that will help the team to run batche
 
 The tool has been written with `Node.JS`.
 
+![Statistics](../assets/stats.png)
+
+## Workflow
+
+You can find further details about the workflow and how the workers are managed in [WORKFLOW.md](WORKFLOW.md) file.
+
 ## Notes:
 
 `eslint` has been used as a linter for the project.
@@ -91,7 +97,7 @@ docker exec -ti ${TIMESCALE_CONTAINER_NAME} bash -c 'psql -U postgres < /data/cp
 docker exec -ti ${TIMESCALE_CONTAINER_NAME} bash -c 'psql -U postgres < /data/cpu_import.sql'
 ```
 
-### Docker Compose
+### Docker Compose:
 
 Instead of managing different dependencies separately, I used `docker-compose` with `timescale` docker image to provision the database:
 
