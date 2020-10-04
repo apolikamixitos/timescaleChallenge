@@ -3,7 +3,7 @@ const cluster = require('cluster');
 const { argv } = require('yargs');
 const ClusterManager = require('./lib/cluster-manager');
 const Parser = require('./lib/parser');
-const { queryFile } = require('./config');
+const { queryFile, maxConcurrentWorkers } = require('./config');
 
 async function main() {
   // Process the input
@@ -16,11 +16,8 @@ async function main() {
   const validEntries = parser.parseQueries();
 
   // Prepare the cluster manager
-  const clusterManager = new ClusterManager();
-
-  // Used to setup the worker module that will be controlled by the master
-  cluster.setupMaster({ exec: path.join(__dirname, './lib/worker.js') });
-
+  const workerFilePath = path.join(__dirname, './lib/worker.js');
+  const clusterManager = new ClusterManager(workerFilePath, maxConcurrentWorkers);
   clusterManager.prepareWorkerTasks(validEntries);
 
   // Listener for the message replies from the workers

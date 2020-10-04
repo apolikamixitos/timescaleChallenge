@@ -1,12 +1,12 @@
 const cluster = require('cluster');
 const moment = require('moment');
+const fs = require('fs');
 const _ = require('lodash');
 const { calculateMedian } = require('./utils');
-const { maxConcurrentWorkers } = require('../config');
 const { WORKER_ACTION, WORKER_STATUS } = require('../constant');
 
 class ClusterManager {
-  constructor() {
+  constructor(workerFilePath, maxConcurrentWorkers) {
     // Orchestrates the different workers tasks
     this.workerTasks = {};
 
@@ -18,6 +18,15 @@ class ClusterManager {
       queriesStats: [],
       scriptStartDate: moment(),
     };
+
+    this.maxConcurrentWorkers = maxConcurrentWorkers;
+
+    // Used to setup the worker module that will be controlled by the master
+    if (fs.existsSync(workerFilePath)) {
+      cluster.setupMaster({ exec: workerFilePath });
+    } else {
+      throw Error('Worker module file doesn\'t exist');
+    }
 
     // Events
     // Mandatory for event binding
@@ -36,7 +45,7 @@ class ClusterManager {
 
       // workerModuloId represents an Id that doesn't
       // exceed the total of the concurrent workers
-      const workerModuloId = (hostId % maxConcurrentWorkers);
+      const workerModuloId = (hostId % this.maxConcurrentWorkers);
       const payload = {
         hostname: validEntry.hostname,
         startTime: validEntry.start_time,
@@ -82,6 +91,14 @@ class ClusterManager {
         action: WORKER_ACTION.PERFORM_QUERY,
         data: workerPayload,
       });
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  shutdown() {
+    Object.keys(cluster.workers).map((workerId) => {
+      cluster.workers[workerId].kill();
+      return workerId;
     });
   }
 

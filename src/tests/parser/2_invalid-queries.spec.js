@@ -1,6 +1,6 @@
 const path = require('path');
 const { expect } = require('chai');
-const Parser = require('../lib/parser');
+const Parser = require('../../lib/parser');
 
 describe('Invalid queries files checks', () => {
   it('Inexistant file', async () => {

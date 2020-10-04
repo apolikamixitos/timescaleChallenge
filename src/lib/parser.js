@@ -63,8 +63,8 @@ class Parser {
 
     // Validate the start_time, end_time
     records.map((record, index) => {
-      const startTime = moment(record.start_time).format('YYYY-MM-DD HH:mm:ss');
-      const endTime = moment(record.end_time).format('YYYY-MM-DD HH:mm:ss');
+      const startTime = moment(record.start_time, 'YYYY-MM-DD HH:mm:ss');
+      const endTime = moment(record.end_time, 'YYYY-MM-DD HH:mm:ss');
 
       if (startTime > endTime) {
         throw Error(`Line ${index}: start time should be greater than end time`);

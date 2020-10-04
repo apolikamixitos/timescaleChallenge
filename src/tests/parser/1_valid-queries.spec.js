@@ -1,6 +1,7 @@
 const path = require('path');
+const moment = require('moment');
 const { expect } = require('chai');
-const Parser = require('../lib/parser');
+const Parser = require('../../lib/parser');
 
 describe('Valid queries files checks', () => {
   it('Full queries', () => {
@@ -19,7 +20,11 @@ describe('Valid queries files checks', () => {
       expect(validEntry).to.have.property('start_time');
       expect(validEntry).to.have.property('end_time');
 
-      // TODO: Check startDate & endDate
+      const startTime = moment(validEntry.start_time, 'YYYY-MM-DD HH:mm:ss');
+      const endTime = moment(validEntry.end_time, 'YYYY-MM-DD HH:mm:ss');
+      const timeDiff = endTime.diff(startTime, 'milliseconds');
+
+      expect(timeDiff).to.be.greaterThan(0);
       return validEntry;
     });
   });
